@@ -17,3 +17,7 @@ venv.bak/
 
 # Log files
 *.log
+
+
+# Documents
+*.pdf

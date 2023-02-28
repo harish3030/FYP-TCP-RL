@@ -114,17 +114,24 @@ class TcpTimeBased(Tcp):
         # avgRtt
         avgRtt = obs[11]
         # minRtt
-        minRtt = obs[12]
+        rttRatio = obs[12]
         # avgInterTx
         avgInterTx = obs[13]
         # avgInterRx
         avgInterRx = obs[14]
+       
+        # EWMA Inter Tx
+        # EWMA_InterTx=obs[13]
+        
+        #EWMA Inter Rx
+        # EWMA_InterRx=obs[14]
+
         # throughput
         throughput = obs[15]
 
         # compute new values
-        new_cWnd = 10 * segmentSize
-        new_ssThresh = 5 * segmentSize
+        # new_cWnd = 10 * segmentSize
+        # new_ssThresh = 5 * segmentSize
 
         # return actions
         actions = [new_ssThresh, new_cWnd]

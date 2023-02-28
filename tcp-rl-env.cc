@@ -7,7 +7,7 @@
 #include "ns3/tcp-socket-base.h"
 #include <vector>
 #include <numeric>
-
+#include <cmath>
 
 namespace ns3 {
 
@@ -161,12 +161,51 @@ TcpGymEnv::GetGameOver()
 /*
 Define reward function
 */
-float
-TcpGymEnv::GetReward()
-{
-  NS_LOG_INFO("MyGetReward: " << m_envReward);
-  return m_envReward;
-}
+// float
+// TcpGymEnv::GetReward()
+// {
+  
+//   if (TcpTimeStepGymEnv *child = dynamic_cast<TcpTimeStepGymEnv*>(this)) {
+//        // child->childMember = 0;
+//         if(child->m_tcb!=nullptr){
+  
+//   //uint64_t diff=m_current_rtt.GetMicroSeconds();
+//         uint64_t diff=(child->m_current_rtt-child->m_minRtt).GetMicroSeconds();
+//         uint64_t segmentsAckedSum = std::accumulate(child->m_segmentsAcked.begin(), child->m_segmentsAcked.end(), 0);
+        
+//         float m_throughput = (segmentsAckedSum * child->m_tcb->m_segmentSize) / child->m_timeStep.GetSeconds();
+//         std::cout<<"Throughput: "<<m_throughput<<"\n";
+//         std::cout<<"Min RTT: "<<child->m_minRtt<<"\n";
+//         std::cout<<"Current RTT: "<<child->m_current_rtt<<"\n";
+      
+        
+//         float utility_value=log((m_throughput*8)/(2*1e6))-log(diff);
+//         if(utility_value==INFINITY){
+//           utility_value=log((m_throughput*8)/(2*1e6));
+//         }
+//         std::cout<<"Utility value: "<<utility_value<<"\n";
+//         std::cout<<"-----------------\n";
+        
+          
+//           //float last_utility_val=m_utilities.back();
+//           float delta=utility_value-child->old_U;
+//           if(delta>=0)child->m_reward=10;
+//           if(delta>=0 and delta<1)child->m_reward=2;
+//           if(delta>=-1 and delta<0)child->m_reward=-2;
+
+//           if(delta<-1)child->m_reward=-10;;
+          
+
+        
+//           child->old_U=utility_value;
+//            m_envReward=child->m_reward;
+//   }
+//   }
+ 
+//   NS_LOG_INFO("MyGetReward: " << m_envReward);
+
+//   return m_envReward;
+// }
 
 /*
 Define extra info. Optional
@@ -175,6 +214,7 @@ std::string
 TcpGymEnv::GetExtraInfo()
 {
   NS_LOG_INFO("MyGetExtraInfo: " << m_info);
+
   return m_info;
 }
 
@@ -222,7 +262,10 @@ TcpEventGymEnv::DoDispose ()
 {
   NS_LOG_FUNCTION (this);
 }
-
+float
+TcpEventGymEnv::GetReward(){
+  return m_reward;
+}
 void
 TcpEventGymEnv::SetReward(float value)
 {
@@ -435,12 +478,52 @@ TcpTimeStepGymEnv::SetTimeStep(Time value)
   NS_LOG_FUNCTION (this);
   m_timeStep = value;
 }
+float
+TcpTimeStepGymEnv::GetReward(){
+   
+  // if(m_tcb!=nullptr){
+  
+  // //uint64_t diff=m_current_rtt.GetMicroSeconds();
+  // uint64_t diff=(m_current_rtt-m_minRtt).GetMicroSeconds();
+  // uint64_t segmentsAckedSum = std::accumulate(m_segmentsAcked.begin(), m_segmentsAcked.end(), 0);
+  
+  // float m_throughput = (segmentsAckedSum * m_tcb->m_segmentSize) / m_timeStep.GetSeconds();
+  // std::cout<<"Throughput: "<<m_throughput<<"\n";
+  // std::cout<<"Min RTT: "<<m_minRtt<<"\n";
+  // std::cout<<"Current RTT: "<<m_current_rtt<<"\n";
+ 
+  
+  // float utility_value=log((m_throughput*8)/(2*1e6))-log(diff);
+  // if(utility_value==INFINITY){
+  //   utility_value=log((m_throughput*8)/(2*1e6));
+  // }
+  // std::cout<<"Utility value: "<<utility_value<<"\n";
+  //  std::cout<<"-----------------\n";
+  
+    
+  //   //float last_utility_val=m_utilities.back();
+  //   float delta=utility_value-old_U;
+  //   if(delta>=0)m_reward=10;
+  //   if(delta>=0 and delta<1)m_reward=2;
+  //   if(delta>=-1 and delta<0)m_reward=-2;
 
+  //   if(delta<-1)m_reward=-10;;
+    
+
+  
+  //   old_U=utility_value;
+  // }
+
+   NS_LOG_INFO("MyGetReward: " << m_reward);
+   return m_reward;
+}
 void
 TcpTimeStepGymEnv::SetReward(float value)
 {
+ 
+  
   NS_LOG_FUNCTION (this);
-  m_reward = value;
+  //m_reward = value;
 }
 
 void
@@ -514,7 +597,7 @@ TcpTimeStepGymEnv::GetObservation()
   box->AddValue(bytesInFlightAvg);
 
   //segmentsAckedSum
-  uint64_t segmentsAckedSum = std::accumulate(m_segmentsAcked.begin(), m_segmentsAcked.end(), 0);
+   uint64_t segmentsAckedSum = std::accumulate(m_segmentsAcked.begin(), m_segmentsAcked.end(), 0);
   box->AddValue(segmentsAckedSum);
 
   //segmentsAckedAvg
@@ -532,24 +615,56 @@ TcpTimeStepGymEnv::GetObservation()
   box->AddValue(avgRtt.GetMicroSeconds ());
 
   //m_minRtt
+ 
+  //box->AddValue((m_current_rtt.GetMicroSeconds())/(m_tcb->m_minRtt.GetMicroSeconds()));
   box->AddValue(m_tcb->m_minRtt.GetMicroSeconds ());
 
-  //avgInterTx
+  // //avgInterTx
   Time avgInterTx = Seconds(0.0);
   if (m_interTxTimeNum) {
     avgInterTx = m_interTxTimeSum / m_interTxTimeNum;
   }
   box->AddValue(avgInterTx.GetMicroSeconds ());
 
-  //avgInterRx
+  // //avgInterRx
   Time avgInterRx = Seconds(0.0);
   if (m_interRxTimeNum) {
     avgInterRx = m_interRxTimeSum / m_interRxTimeNum;
   }
   box->AddValue(avgInterRx.GetMicroSeconds ());
 
+  //EWMA avgInterTx
+  // Time EWMA_InterTx=Seconds(0.0);
+  // if(flag){
+  //    EWMA_InterTx=m_last_interTxTime;
+  //    m_EWMA_interTxTime=EWMA_InterTx;
+  //    flag=0;
+  // }
+  // else{
+  //    EWMA_InterTx=alpha*m_last_interTxTime + (1-alpha) * m_EWMA_interTxTime;
+  //    m_EWMA_interTxTime = EWMA_InterTx;
+  // }
+  // //cout<<
+  // box->AddValue(EWMA_InterTx.GetMicroSeconds ());
+
+   //EWMA avgInterRx
+  // Time EWMA_InterRx=Seconds(0.0);
+  // if(flag1){
+  //    EWMA_InterRx=m_last_interRxTime;
+  //    m_EWMA_interRxTime=EWMA_InterRx;
+  //    flag1=0;
+  // }
+  // else{
+  //    EWMA_InterRx=alpha*m_last_interRxTime + (1-alpha) * m_EWMA_interRxTime;
+  //    m_EWMA_interRxTime = EWMA_InterRx;
+  // }
+  // box->AddValue(EWMA_InterRx.GetMicroSeconds ());
+
+
   //throughput  bytes/s
   float throughput = (segmentsAckedSum * m_tcb->m_segmentSize) / m_timeStep.GetSeconds();
+  //std::cout<<"Observation throughput: "<<throughput<<"\n";
+  m_throughput=throughput;
   box->AddValue(throughput);
 
 /*---------------------------------------------------------------------------------------------------*/
@@ -561,44 +676,89 @@ TcpTimeStepGymEnv::GetObservation()
   // TODO: this is not the right way of doing this.
   // place this somewhere else. see TcpEventGymEnv, how they've done it.
 
-  if (m_new_cWnd > m_old_cWnd && m_totalAvgRttSum > 0 && avgRtt > 0)  {
-    // when agent increases cWnd
-    if ((m_totalAvgRttSum / m_totalAvgRttNum) >= avgRtt)  {
-      // give reward for decreasing avgRtt
-      m_envReward = m_reward;
-    } else {
-      // give penalty for increasing avgRtt
-      m_envReward = m_penalty;
-    }
-  } else  {
-    // agent has not increased cWnd
-    m_envReward = 0;
+  // if (m_new_cWnd > m_old_cWnd && m_totalAvgRttSum > 0 && avgRtt > 0)  {
+  //   // when agent increases cWnd
+  //   if ((m_totalAvgRttSum / m_totalAvgRttNum) >= avgRtt)  {
+  //     // give reward for decreasing avgRtt
+  //     m_envReward = m_reward;
+  //   } else {
+  //     // give penalty for increasing avgRtt
+  //     m_envReward = m_penalty;
+  //   }
+  // } else  {
+  //   // agent has not increased cWnd
+  //   m_envReward = 0;
+  // }
+
+  // // Update m_totalAvgRtSum and m_totalAvgRttNum
+  // m_totalAvgRttSum += avgRtt;
+  // m_totalAvgRttNum++;
+
+  // m_old_cWnd = m_new_cWnd;
+/*---------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------------*/
+
+
+  if(m_tcb!=nullptr){
+  
+  //uint64_t diff=m_current_rtt.GetMicroSeconds();
+  uint64_t diff=(m_current_rtt-m_minRtt).GetMicroSeconds();
+  uint64_t segmentsAckedSum = std::accumulate(m_segmentsAcked.begin(), m_segmentsAcked.end(), 0);
+  
+  float m_throughput = (segmentsAckedSum * m_tcb->m_segmentSize) / m_timeStep.GetSeconds();
+  std::cout<<"Throughput: "<<m_throughput<<"\n";
+  std::cout<<"Min RTT: "<<m_minRtt<<"\n";
+  std::cout<<"Current RTT: "<<m_current_rtt<<"\n";
+ 
+  
+  float utility_value=log((m_throughput*8)/(10*1e6))-0.01*log(diff);
+  if(std::isinf(utility_value) or std::isnan(utility_value)){
+    utility_value=log((m_throughput*8)/(10*1e6));
   }
+  std::cout<<"Utility value: "<<utility_value<<"\n";
+   std::cout<<"-----------------\n";
+  
+    
+    //float last_utility_val=m_utilities.back();
+    float delta=old_U-utility_value;
+    if(delta>=0)m_reward=10;
+    if(delta>=0 and delta<1)m_reward=5;
+    if(delta>=-1 and delta<0)m_reward=-5;
 
-  // Update m_totalAvgRtSum and m_totalAvgRttNum
-  m_totalAvgRttSum += avgRtt;
-  m_totalAvgRttNum++;
+    if(delta<-1)m_reward=-10;;
+    
 
-  m_old_cWnd = m_new_cWnd;
-/*---------------------------------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------------------------------*/
+  
+    old_U=utility_value;
+  }
 
   // Print data
   NS_LOG_INFO ("MyGetObservation: " << box);
 
   m_bytesInFlight.clear();
   m_segmentsAcked.clear();
-
+  //_utilities.clear();
   m_rttSampleNum = 0;
   m_rttSum = MicroSeconds (0.0);
-
+  m_current_rtt=MicroSeconds(0.0);
+  m_minRtt=MicroSeconds(0.0);
+  m_throughput=0.0;
+  //m_minRtt=0;
   m_interTxTimeNum = 0;
   m_interTxTimeSum = MicroSeconds (0.0);
 
   m_interRxTimeNum = 0;
   m_interRxTimeSum = MicroSeconds (0.0);
   
+
+  m_last_interRxTime=MicroSeconds(0.0);
+  m_last_interTxTime=MicroSeconds(0.0);
+  m_EWMA_interRxTime=MicroSeconds(0.0);
+  m_EWMA_interTxTime=MicroSeconds(0.0);
+
+  flag=1;
+  flag1=1;
   return box;
 }
 
@@ -608,6 +768,7 @@ TcpTimeStepGymEnv::TxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const Tcp
   NS_LOG_FUNCTION (this);
   if ( m_lastPktTxTime > MicroSeconds(0.0) ) {
     Time interTxTime = Simulator::Now() - m_lastPktTxTime;
+    m_last_interTxTime=interTxTime;
     m_interTxTimeSum += interTxTime;
     m_interTxTimeNum++;
   }
@@ -621,6 +782,7 @@ TcpTimeStepGymEnv::RxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const Tcp
   NS_LOG_FUNCTION (this);
   if ( m_lastPktRxTime > MicroSeconds(0.0) ) {
     Time interRxTime = Simulator::Now() - m_lastPktRxTime;
+    m_last_interRxTime=interRxTime;
     m_interRxTimeSum +=  interRxTime;
     m_interRxTimeNum++;
   }
@@ -644,6 +806,7 @@ TcpTimeStepGymEnv::GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInF
 
   // action
   return m_new_ssThresh;
+  
 }
 
 void
@@ -671,7 +834,14 @@ TcpTimeStepGymEnv::PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked, c
   NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " PktsAcked, SegmentsAcked: " << segmentsAcked << " Rtt: " << rtt);
   m_tcb = tcb;
   m_rttSum += rtt;
+  if(m_minRtt==MicroSeconds(0.0)){
+    m_minRtt=rtt;
+  }
+  else m_minRtt=std::min(m_minRtt,rtt);
+  m_current_rtt=rtt;
   m_rttSampleNum++;
+
+ // tcb->m_cWnd=tcb->m_cWnd+(m_new_cWnd/tcb->m_cWnd); //set new congestion window
 }
 
 void

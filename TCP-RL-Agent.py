@@ -129,6 +129,9 @@ tp_history = []
 
 recency = maxSteps // 15
 
+# U_new=0
+# U_old=0
+# U=0
 
 done = False
 
@@ -196,8 +199,19 @@ for iteration in range(iterationNum):
 			# new_cWnd = max(init_cWnd, (min(thresh, calc_cWnd)))
 
 			new_ssThresh = int(cWnd/2)
+			#new_cWnd=calc_cWnd
 			actions = [new_ssThresh, new_cWnd]
 
+			# U_new=0.7*(np.log(state[5]))-0.7*(np.log(state[7] ))
+			# U=U_new-U_old
+			# if U <-0.05:
+			# 	reward=-5
+			# elif U >0.05:
+			# 	reward=1
+			# else:
+			# 	reward=0
+            
+			# U_old=0.7*(np.log(state[5]))-0.7*(np.log(state[7] ))
 			# Take action step on environment and get feedback
 			next_state, reward, done, _ = env.step(actions)
 
@@ -210,6 +224,7 @@ for iteration in range(iterationNum):
 			
 			print("\t[#] Next state: ", next_state, file=w_file)
 			print("\t[!] Reward: ", reward, file=w_file)
+			print("\t[$] Congestion Window: ",cWnd,file=w_file)
 
 			next_state = np.reshape(next_state, [1, state_size])
 			

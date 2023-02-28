@@ -30,7 +30,7 @@ public:
   // OpenGym interface
   virtual Ptr<OpenGymSpace> GetActionSpace();
   virtual bool GetGameOver();
-  virtual float GetReward();
+  virtual float GetReward()=0;
   virtual std::string GetExtraInfo();
   virtual bool ExecuteActions(Ptr<OpenGymDataContainer> action);
 
@@ -93,6 +93,7 @@ public:
 
   // OpenGym interface
   virtual Ptr<OpenGymSpace> GetObservationSpace();
+  float GetReward();
   Ptr<OpenGymDataContainer> GetObservation();
 
   // trace packets, e.g. for calculating inter tx/rx time
@@ -139,6 +140,7 @@ public:
 
   // OpenGym interface
   virtual Ptr<OpenGymSpace> GetObservationSpace();
+  float GetReward();
   Ptr<OpenGymDataContainer> GetObservation();
 
   // trace packets, e.g. for calculating inter tx/rx time
@@ -153,26 +155,39 @@ public:
   virtual void CongestionStateSet (Ptr<TcpSocketState> tcb, const TcpSocketState::TcpCongState_t newState);
   virtual void CwndEvent (Ptr<TcpSocketState> tcb, const TcpSocketState::TcpCAEvent_t event);
 
-private:
+
   void ScheduleNextStateRead();
+private:
   bool m_started {false};
   Time m_duration;
   Time m_timeStep;
 
+  float old_U=0.0;
+  float alpha=0.1;
+  bool flag=1;
+  bool flag1=1;
   // state
   Ptr<const TcpSocketState> m_tcb;
   std::vector<uint32_t> m_bytesInFlight;
   std::vector<uint32_t> m_segmentsAcked;
-
+  
+  Time m_last_interTxTime {MicroSeconds(0.0)};
+  Time m_last_interRxTime {MicroSeconds (0.0)};
+  Time m_EWMA_interTxTime {MicroSeconds(0.0)};
+  Time m_EWMA_interRxTime {MicroSeconds(0.0)};
   uint64_t m_rttSampleNum {0};
   Time m_rttSum {MicroSeconds (0.0)};
-
+  Time m_current_rtt {MicroSeconds (0.0)};
+  Time m_minRtt {MicroSeconds(0.0)};
+  float m_throughput {0.0};
   Time m_lastPktTxTime {MicroSeconds(0.0)};
   Time m_lastPktRxTime {MicroSeconds(0.0)};
   uint64_t m_interTxTimeNum {0};
   Time m_interTxTimeSum {MicroSeconds (0.0)};
+ 
   uint64_t m_interRxTimeNum {0};
   Time m_interRxTimeSum {MicroSeconds (0.0)};
+ 
   Time m_prevAvgRtt {MicroSeconds (0.0)};
   Time m_totalAvgRttSum {MicroSeconds (0.0)};
   uint64_t m_totalAvgRttNum {0};
