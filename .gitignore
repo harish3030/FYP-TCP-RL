@@ -21,3 +21,9 @@ venv.bak/
 
 # Documents
 *.pdf
+
+*.vscode
+
+checkpoints/
+DQN_model/
+plots.py
