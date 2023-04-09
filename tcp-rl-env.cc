@@ -39,20 +39,20 @@ TcpGymEnv::GetTypeId (void)
 void
 TcpGymEnv::DoDispose ()
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
 }
 
 void
 TcpGymEnv::SetNodeId(uint32_t id)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   m_nodeId = id;
 }
 
 void
 TcpGymEnv::SetSocketUuid(uint32_t id)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   m_socketUuid = id;
 }
 
@@ -137,7 +137,7 @@ TcpGymEnv::GetActionSpace()
   std::string dtype = TypeNameGet<uint32_t> ();
 
   Ptr<OpenGymBoxSpace> box = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
-  NS_LOG_INFO ("MyGetActionSpace: " << box);
+  // NS_LOG_INFO ("MyGetActionSpace: " << box);
   return box;
 }
 
@@ -154,7 +154,7 @@ TcpGymEnv::GetGameOver()
   if (stepCounter == 10 && test) {
       m_isGameOver = true;
   }
-  NS_LOG_INFO ("MyGetGameOver: " << m_isGameOver);
+  // NS_LOG_INFO ("MyGetGameOver: " << m_isGameOver);
   return m_isGameOver;
 }
 
@@ -213,7 +213,7 @@ Define extra info. Optional
 std::string
 TcpGymEnv::GetExtraInfo()
 {
-  NS_LOG_INFO("MyGetExtraInfo: " << m_info);
+  // NS_LOG_INFO("MyGetExtraInfo: " << m_info);
 
   return m_info;
 }
@@ -224,7 +224,8 @@ Execute received actions
 bool
 TcpGymEnv::ExecuteActions(Ptr<OpenGymDataContainer> action)
 {
-  Ptr<OpenGymBoxContainer<uint32_t> > box = DynamicCast<OpenGymBoxContainer<uint32_t> >(action);
+  Ptr<OpenGymBoxContainer<uint32_t> > box = DynamicCast<OpenGymBoxContainer<uint32_t> >
+                                                                            (action);
   m_new_ssThresh = box->GetValue(0);
   m_new_cWnd = box->GetValue(1);
 
@@ -237,12 +238,12 @@ NS_OBJECT_ENSURE_REGISTERED (TcpEventGymEnv);
 
 TcpEventGymEnv::TcpEventGymEnv () : TcpGymEnv()
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
 }
 
 TcpEventGymEnv::~TcpEventGymEnv ()
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
 }
 
 TypeId
@@ -260,7 +261,7 @@ TcpEventGymEnv::GetTypeId (void)
 void
 TcpEventGymEnv::DoDispose ()
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
 }
 float
 TcpEventGymEnv::GetReward(){
@@ -269,14 +270,14 @@ TcpEventGymEnv::GetReward(){
 void
 TcpEventGymEnv::SetReward(float value)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   m_reward = value;
 }
 
 void
 TcpEventGymEnv::SetPenalty(float value)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   m_penalty = value;
 }
 
@@ -308,7 +309,7 @@ TcpEventGymEnv::GetObservationSpace()
   std::string dtype = TypeNameGet<uint64_t> ();
 
   Ptr<OpenGymBoxSpace> box = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
-  NS_LOG_INFO ("MyGetObservationSpace: " << box);
+  // NS_LOG_INFO ("MyGetObservationSpace: " << box);
   return box;
 }
 
@@ -347,19 +348,19 @@ TcpEventGymEnv::GetObservation()
 void
 TcpEventGymEnv::TxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const TcpSocketBase>)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
 }
 
 void
 TcpEventGymEnv::RxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const TcpSocketBase>)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
 }
 
 uint32_t
 TcpEventGymEnv::GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInFlight)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   // pkt was lost, so penalty
   m_envReward = m_penalty;
 
@@ -431,20 +432,20 @@ NS_OBJECT_ENSURE_REGISTERED (TcpTimeStepGymEnv);
 
 TcpTimeStepGymEnv::TcpTimeStepGymEnv () : TcpGymEnv()
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
 }
 
 void
 TcpTimeStepGymEnv::ScheduleNextStateRead ()
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   Simulator::Schedule (m_timeStep, &TcpTimeStepGymEnv::ScheduleNextStateRead, this);
   Notify();
 }
 
 TcpTimeStepGymEnv::~TcpTimeStepGymEnv ()
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
 }
 
 TypeId
@@ -462,107 +463,89 @@ TcpTimeStepGymEnv::GetTypeId (void)
 void
 TcpTimeStepGymEnv::DoDispose ()
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
 }
 
 void
 TcpTimeStepGymEnv::SetDuration(Time value)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   m_duration = value;
 }
 
 void
 TcpTimeStepGymEnv::SetTimeStep(Time value)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   m_timeStep = value;
 }
 float
 TcpTimeStepGymEnv::GetReward(){
-   
-  // if(m_tcb!=nullptr){
-  
-  // //uint64_t diff=m_current_rtt.GetMicroSeconds();
-  // uint64_t diff=(m_current_rtt-m_minRtt).GetMicroSeconds();
-  // uint64_t segmentsAckedSum = std::accumulate(m_segmentsAcked.begin(), m_segmentsAcked.end(), 0);
-  
-  // float m_throughput = (segmentsAckedSum * m_tcb->m_segmentSize) / m_timeStep.GetSeconds();
-  // std::cout<<"Throughput: "<<m_throughput<<"\n";
-  // std::cout<<"Min RTT: "<<m_minRtt<<"\n";
-  // std::cout<<"Current RTT: "<<m_current_rtt<<"\n";
  
+//  if(m_tcb!=nullptr){
   
-  // float utility_value=log((m_throughput*8)/(2*1e6))-log(diff);
-  // if(utility_value==INFINITY){
-  //   utility_value=log((m_throughput*8)/(2*1e6));
-  // }
-  // std::cout<<"Utility value: "<<utility_value<<"\n";
-  //  std::cout<<"-----------------\n";
-  
-    
-  //   //float last_utility_val=m_utilities.back();
-  //   float delta=utility_value-old_U;
-  //   if(delta>=0)m_reward=10;
-  //   if(delta>=0 and delta<1)m_reward=2;
-  //   if(delta>=-1 and delta<0)m_reward=-2;
-
-  //   if(delta<-1)m_reward=-10;;
-    
-
-  
-  //   old_U=utility_value;
-  // }
-
-   NS_LOG_INFO("MyGetReward: " << m_reward);
-   return m_reward;
+//   uint64_t diff=(m_current_rtt-m_minRtt).GetMicroSeconds();
+//   uint64_t segmentsAckedSum = std::accumulate(m_segmentsAcked.begin(), m_segmentsAcked.end(), 
+//                                              0);
+//   float m_throughput = (segmentsAckedSum * m_tcb->m_segmentSize) / m_timeStep.GetSeconds();
+//   float utility_value=log((m_throughput*8)/(10*1e6))-0.01*log(diff);
+//   if(std::isinf(utility_value) or std::isnan(utility_value)){
+//     utility_value=log((m_throughput*8)/(10*1e6));
+//   }
+//   float delta=old_U-utility_value;
+//   if(delta>=0)m_reward=10;
+//   if(delta>=0 and delta<1)m_reward=5;
+//   if(delta>=-1 and delta<0)m_reward=-5;
+//   if(delta<-1)m_reward=-10;
+//   old_U=utility_value;
+//  }
+  // NS_LOG_INFO("MyGetReward: " << m_reward);
+  return m_reward;
 }
 void
 TcpTimeStepGymEnv::SetReward(float value)
 {
  
   
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   //m_reward = value;
 }
 
 void
 TcpTimeStepGymEnv::SetPenalty(float value)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   m_penalty = value;
 }
 
-/*
-Define observation space
-*/
-Ptr<OpenGymSpace>
-TcpTimeStepGymEnv::GetObservationSpace()
+
+
+//Define observation space
+Ptr<OpenGymSpace> TcpTimeStepGymEnv::GetObservationSpace()
 {
-  // socket unique ID
-  // tcp env type: event-based = 0 / time-based = 1
-  // sim time in us
-  // node ID
-  // ssThresh
-  // cWnd
-  // segmentSize
-  // bytesInFlightSum
-  // bytesInFlightAvg
-  // segmentsAckedSum
-  // segmentsAckedAvg
-  // avgRtt
-  // minRtt
-  // avgInterTx
-  // avgInterRx
-  // throughput
+  // 1.socket unique ID
+  // 2.tcp env type: event-based = 0 / time-based = 1
+  // 3.sim time in us
+  // 4.node ID
+  // 5.ssThresh
+  // 6.cWnd
+  // 7.segmentSize
+  // 8.bytesInFlightSum
+  // 9.bytesInFlightAvg
+  // 10;segmentsAckedSum
+  // 11segmentsAckedAvg
+  // 12avgRtt
+  // 13minRtt
+  // 14avgInterTx
+  // 15avgInterRx
+  // 16throughput
   uint32_t parameterNum = 16;
   float low = 0.0;
   float high = 1000000000.0;
   std::vector<uint32_t> shape = {parameterNum,};
   std::string dtype = TypeNameGet<uint64_t> ();
-
   Ptr<OpenGymBoxSpace> box = CreateObject<OpenGymBoxSpace> (low, high, shape, dtype);
-  NS_LOG_INFO ("MyGetObservationSpace: " << box);
+  // NS_LOG_INFO ("MyGetObservationSpace: " << box);
   return box;
 }
 
@@ -575,63 +558,80 @@ TcpTimeStepGymEnv::GetObservation()
   uint32_t parameterNum = 16;
   std::vector<uint32_t> shape = {parameterNum,};
 
-  Ptr<OpenGymBoxContainer<uint64_t> > box = CreateObject<OpenGymBoxContainer<uint64_t> >(shape);
-
+  Ptr<OpenGymBoxContainer<uint64_t> > box = CreateObject<OpenGymBoxContainer<uint64_t>>
+                                                                        (shape);
+  
   box->AddValue(m_socketUuid);
   box->AddValue(1);
   box->AddValue(Simulator::Now().GetMicroSeconds ());
   box->AddValue(m_nodeId);
+  
+  //0
   box->AddValue(m_tcb->m_ssThresh);
+  //1
   box->AddValue(m_tcb->m_cWnd);
+  //2
   box->AddValue(m_tcb->m_segmentSize);
 
-  //bytesInFlightSum
-  uint64_t bytesInFlightSum = std::accumulate(m_bytesInFlight.begin(), m_bytesInFlight.end(), 0);
+  //3.bytesInFlightSum
+  uint64_t bytesInFlightSum = std::accumulate(m_bytesInFlight.begin(), m_bytesInFlight.end(), 
+                                              0);
   box->AddValue(bytesInFlightSum);
 
-  //bytesInFlightAvg
+  
+  //4.bytesInFlightAvg
   uint64_t bytesInFlightAvg = 0;
   if (m_bytesInFlight.size()) {
     bytesInFlightAvg = bytesInFlightSum / m_bytesInFlight.size();
   }
   box->AddValue(bytesInFlightAvg);
 
-  //segmentsAckedSum
-   uint64_t segmentsAckedSum = std::accumulate(m_segmentsAcked.begin(), m_segmentsAcked.end(), 0);
+  //5.segmentsAckedSum
+   uint64_t segmentsAckedSum = std::accumulate(m_segmentsAcked.begin(),m_segmentsAcked.end(), 
+                                               0);
   box->AddValue(segmentsAckedSum);
 
-  //segmentsAckedAvg
+  //6.segmentsAckedAvg
   uint64_t segmentsAckedAvg = 0;
   if (m_segmentsAcked.size()) {
     segmentsAckedAvg = segmentsAckedSum / m_segmentsAcked.size();
   }
   box->AddValue(segmentsAckedAvg);
 
-  //avgRtt
-  Time avgRtt = Seconds(0.0);
-  if(m_rttSampleNum) {
-    avgRtt = m_rttSum / m_rttSampleNum;
-  }
-  box->AddValue(avgRtt.GetMicroSeconds ());
+  //7.avgRtt
+  // Time avgRtt = Seconds(0.0);
+  // if(m_rttSampleNum) {
+  //   avgRtt = m_rttSum / m_rttSampleNum;
+  // }
+  // box->AddValue(avgRtt.GetMicroSeconds ());
+  box->AddValue(m_tcb->m_lastRtt.Get().GetMicroSeconds());
 
-  //m_minRtt
- 
-  //box->AddValue((m_current_rtt.GetMicroSeconds())/(m_tcb->m_minRtt.GetMicroSeconds()));
-  box->AddValue(m_tcb->m_minRtt.GetMicroSeconds ());
+  //8.m_minRtt
+   box->AddValue(m_tcb->m_minRtt.GetMicroSeconds ());
 
-  // //avgInterTx
+  // 9.avgInterTx
   Time avgInterTx = Seconds(0.0);
   if (m_interTxTimeNum) {
     avgInterTx = m_interTxTimeSum / m_interTxTimeNum;
   }
   box->AddValue(avgInterTx.GetMicroSeconds ());
 
-  // //avgInterRx
+  // 10.avgInterRx
   Time avgInterRx = Seconds(0.0);
   if (m_interRxTimeNum) {
     avgInterRx = m_interRxTimeSum / m_interRxTimeNum;
   }
   box->AddValue(avgInterRx.GetMicroSeconds ());
+
+  //11.throughput  bytes/s
+  uint64_t throughput = (segmentsAckedSum * m_tcb->m_segmentSize) / m_timeStep.GetSeconds();
+  m_throughput=throughput;
+  box->AddValue(throughput);
+
+  if(throughput==0)box=old_box;
+  else old_box=box;
+
+
 
   //EWMA avgInterTx
   // Time EWMA_InterTx=Seconds(0.0);
@@ -660,12 +660,6 @@ TcpTimeStepGymEnv::GetObservation()
   // }
   // box->AddValue(EWMA_InterRx.GetMicroSeconds ());
 
-
-  //throughput  bytes/s
-  float throughput = (segmentsAckedSum * m_tcb->m_segmentSize) / m_timeStep.GetSeconds();
-  //std::cout<<"Observation throughput: "<<throughput<<"\n";
-  m_throughput=throughput;
-  box->AddValue(throughput);
 
 /*---------------------------------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------------------------------*/
@@ -707,32 +701,29 @@ TcpTimeStepGymEnv::GetObservation()
   uint64_t segmentsAckedSum = std::accumulate(m_segmentsAcked.begin(), m_segmentsAcked.end(), 0);
   
   float m_throughput = (segmentsAckedSum * m_tcb->m_segmentSize) / m_timeStep.GetSeconds();
-  std::cout<<"Throughput: "<<m_throughput<<"\n";
-  std::cout<<"Min RTT: "<<m_minRtt<<"\n";
-  std::cout<<"Current RTT: "<<m_current_rtt<<"\n";
+  // std::cout<<"Throughput: "<<m_throughput<<"\n";
+  // std::cout<<"Min RTT: "<<m_minRtt<<"\n";
+  // std::cout<<"Current RTT: "<<m_current_rtt<<"\n";
  
   
-  float utility_value=log((m_throughput*8)/(10*1e6))-0.01*log(diff);
+  float utility_value=log((m_throughput*8)/(10*1e6))-0.1*log(diff);
   if(std::isinf(utility_value) or std::isnan(utility_value)){
-    utility_value=log((m_throughput*8)/(10*1e6));
+   // utility_value=log((m_throughput*8)/(10*1e6));
+   utility_value=old_U;
   }
-  std::cout<<"Utility value: "<<utility_value<<"\n";
-   std::cout<<"-----------------\n";
-  
-    
-    //float last_utility_val=m_utilities.back();
-    float delta=old_U-utility_value;
+    float delta=utility_value-old_U;
     if(delta>=0)m_reward=10;
     if(delta>=0 and delta<1)m_reward=5;
     if(delta>=-1 and delta<0)m_reward=-5;
 
-    if(delta<-1)m_reward=-10;;
-    
+    if(delta<-1)m_reward=-10;
+    // std::cout<<"Utility value: "<<delta<<"\n";
+    // std::cout<<"-----------------\n";
 
   
     old_U=utility_value;
   }
-
+  // std::cout<<"Node ID: "<<m_nodeId<<"\n";
   // Print data
   NS_LOG_INFO ("MyGetObservation: " << box);
 
@@ -759,13 +750,14 @@ TcpTimeStepGymEnv::GetObservation()
 
   flag=1;
   flag1=1;
+  //old_box=box;
   return box;
 }
 
 void
 TcpTimeStepGymEnv::TxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const TcpSocketBase>)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   if ( m_lastPktTxTime > MicroSeconds(0.0) ) {
     Time interTxTime = Simulator::Now() - m_lastPktTxTime;
     m_last_interTxTime=interTxTime;
@@ -779,7 +771,7 @@ TcpTimeStepGymEnv::TxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const Tcp
 void
 TcpTimeStepGymEnv::RxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const TcpSocketBase>)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   if ( m_lastPktRxTime > MicroSeconds(0.0) ) {
     Time interRxTime = Simulator::Now() - m_lastPktRxTime;
     m_last_interRxTime=interRxTime;
@@ -793,8 +785,8 @@ TcpTimeStepGymEnv::RxPktTrace(Ptr<const Packet>, const TcpHeader&, Ptr<const Tcp
 uint32_t
 TcpTimeStepGymEnv::GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInFlight)
 {
-  NS_LOG_FUNCTION (this);
-  NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " GetSsThresh, BytesInFlight: " << bytesInFlight);
+  // NS_LOG_FUNCTION (this);
+  // NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " GetSsThresh, BytesInFlight: " << bytesInFlight);
   m_tcb = tcb;
   m_bytesInFlight.push_back(bytesInFlight);
 
@@ -812,8 +804,8 @@ TcpTimeStepGymEnv::GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInF
 void
 TcpTimeStepGymEnv::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
 {
-  NS_LOG_FUNCTION (this);
-  NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " IncreaseWindow, SegmentsAcked: " << segmentsAcked);
+  // NS_LOG_FUNCTION (this);
+  // NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " IncreaseWindow, SegmentsAcked: " << segmentsAcked);
   m_tcb = tcb;
   m_segmentsAcked.push_back(segmentsAcked);
   m_bytesInFlight.push_back(tcb->m_bytesInFlight);
@@ -825,19 +817,20 @@ TcpTimeStepGymEnv::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAck
   }
   // action
   tcb->m_cWnd = m_new_cWnd;
+  NS_LOG_INFO("New congestion window: "<<m_new_cWnd);
+  std::cout<<"\n\n";
+  
 }
 
 void
 TcpTimeStepGymEnv::PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked, const Time& rtt)
 {
-  NS_LOG_FUNCTION (this);
-  NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " PktsAcked, SegmentsAcked: " << segmentsAcked << " Rtt: " << rtt);
+  // NS_LOG_FUNCTION (this);
+  // NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " PktsAcked, SegmentsAcked: " << segmentsAcked << " Rtt: " << rtt);
   m_tcb = tcb;
   m_rttSum += rtt;
-  if(m_minRtt==MicroSeconds(0.0)){
-    m_minRtt=rtt;
-  }
-  else m_minRtt=std::min(m_minRtt,rtt);
+
+  m_minRtt=std::min(m_minRtt,rtt);
   m_current_rtt=rtt;
   m_rttSampleNum++;
 
@@ -847,18 +840,26 @@ TcpTimeStepGymEnv::PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked, c
 void
 TcpTimeStepGymEnv::CongestionStateSet (Ptr<TcpSocketState> tcb, const TcpSocketState::TcpCongState_t newState)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   std::string stateName = GetTcpCongStateName(newState);
-  NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " CongestionStateSet: " << newState << " " << stateName);
+  // std::cout<<cnt<<"\n";
+  // std::cout<<"Congestion occurred\n";
+  // std::cout<<"Node ID: "<<m_nodeId<<"\n";
+  // std::cout<<"Old CWND: "<<tcb->m_cWnd<<"\n";
+  // std::cout<<"New CWND: "<<m_new_cWnd<<"\n";
+  
+  //tcb->m_cWnd = m_new_cWnd;
+  // NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " CongestionStateSet: " << newState << " " << stateName);
   m_tcb = tcb;
+ // cnt=cnt+1;
 }
 
 void
 TcpTimeStepGymEnv::CwndEvent (Ptr<TcpSocketState> tcb, const TcpSocketState::TcpCAEvent_t event)
 {
-  NS_LOG_FUNCTION (this);
+  // NS_LOG_FUNCTION (this);
   std::string eventName = GetTcpCAEventName(event);
-  NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " CwndEvent: " << event << " " << eventName);
+  // NS_LOG_INFO(Simulator::Now() << " Node: " << m_nodeId << " CwndEvent: " << event << " " << eventName);
 }
 
 } // namespace ns3

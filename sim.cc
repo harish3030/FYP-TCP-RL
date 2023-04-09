@@ -52,16 +52,16 @@ PrintRxCount()
 
 int main (int argc, char *argv[])
 {
-  uint32_t openGymPort = 5555;
+  uint32_t openGymPort = 5556;
   double tcpEnvTimeStep = 0.1;
-
-  uint32_t nLeaf = 1;
+ LogComponentEnable ("ns3::TcpGymEnv", LOG_LEVEL_ALL);
+  uint32_t nLeaf = 5;
   std::string transport_prot = "TcpRl";
 
   double error_p = 0.0;
   std::string bottleneck_bandwidth = "10Mbps";
   std::string bottleneck_delay = "0.01ms";
-  std::string access_bandwidth = "10Mbps";
+  std::string access_bandwidth = "50Mbps";
   std::string access_delay = "20ms";
   std::string prefix_file_name = "TcpVariantsComparison";
   uint64_t data_mbytes = 0;

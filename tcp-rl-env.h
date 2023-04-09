@@ -166,8 +166,10 @@ private:
   float alpha=0.1;
   bool flag=1;
   bool flag1=1;
+  int cnt=0;
   // state
   Ptr<const TcpSocketState> m_tcb;
+  Ptr<OpenGymBoxContainer<uint64_t> > old_box;
   std::vector<uint32_t> m_bytesInFlight;
   std::vector<uint32_t> m_segmentsAcked;
   
@@ -178,7 +180,7 @@ private:
   uint64_t m_rttSampleNum {0};
   Time m_rttSum {MicroSeconds (0.0)};
   Time m_current_rtt {MicroSeconds (0.0)};
-  Time m_minRtt {MicroSeconds(0.0)};
+  
   float m_throughput {0.0};
   Time m_lastPktTxTime {MicroSeconds(0.0)};
   Time m_lastPktRxTime {MicroSeconds(0.0)};
@@ -192,6 +194,7 @@ private:
   Time m_totalAvgRttSum {MicroSeconds (0.0)};
   uint64_t m_totalAvgRttNum {0};
   uint32_t m_old_cWnd {0};
+  Time m_minRtt {Time::Max()}; 
 
   // reward
   float m_reward;
