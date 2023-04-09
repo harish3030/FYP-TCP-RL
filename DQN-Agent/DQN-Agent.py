@@ -183,6 +183,7 @@ action_mapping[2]=-150
 # action_mapping[4]=3
 
 agent = DQNAgent(state_size, action_size)
+# agent.load_model()
 total_steps = 0
 rewardsum=0
 
