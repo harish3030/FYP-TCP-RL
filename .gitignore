@@ -26,4 +26,6 @@ venv.bak/
 
 checkpoints/
 DQN_model/
+models/
+Plots/
 plots.py
