@@ -58,7 +58,7 @@ int main (int argc, char *argv[])
   std::string transport_prot = "TcpRl";
 
   double error_p = 0.0;
-  std::string bottleneck_bandwidth = "10Mbps";
+  std::string bottleneck_bandwidth = "20Mbps";
   std::string bottleneck_delay = "0.01ms";
   std::string access_bandwidth = "50Mbps";
   std::string access_delay = "20ms";
